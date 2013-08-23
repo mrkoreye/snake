@@ -1,0 +1,31 @@
+.space {
+	height: 20;
+	width: 20;
+	display: inline-block;
+	padding: 1px;
+	display: table-cell;
+	vertical-align: middle;
+	background-color: lightgray;
+	border-radius: 10px;
+}
+
+.row {
+	white-space: nowrap;
+}
+
+#messages {
+	font-size: 82px;
+}
+
+.snake {
+	background-color: red;
+}
+
+.snakeHead {
+	border: 2px solid;
+	border-color: black;
+}
+
+.apple {
+	background-color: blue;
+}
