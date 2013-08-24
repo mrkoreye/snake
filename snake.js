@@ -70,40 +70,21 @@ Snakey.Snake = (function () {
 		this.head = _.last(this.snake);
 	}
 	
-	Snake.prototype.offBoard = function (head) {
-		var min = _.min(head);
-		var max = _.max(head);
+	Snake.prototype.offBoard = function () {
+		var min = _.min(this.head);
+		var max = _.max(this.head);
 		if(max > 29 || min < 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+		
 	Snake.prototype.biggerSnake = function () {
 	    var last = _.first(this.snake);
-	    var newSnakes = [
-	        [],
-	        [],
-	        [],
-	        []
-	    ];
-	    for (var j = 0; j < 4; j++) {
-	        for (var i = 0; i < 2; i++) {
-	            newSnakes[j].push([last[0] + i + 1, last[1]]);
-	        }
-	    }
-
-	    var newLast;
-	    for (var k = 0; k < 4; k++) {
-	        newLast = _.first(newSnakes[k]);
-					console.log(!(Snake.prototype.offBoard(newLast)));
-	        if (!(Snake.prototype.offBoard(newLast))) {
-	            this.snake.unshift(newSnakes[k][0]);
-							this.snake.unshift(newSnakes[k][1]);
-							break;
-	        };
-	    }
+      for (var i = 0; i < 2; i++) {
+          this.snake.unshift([last[0] + i + 1, last[1]]);
+      }
 	}
 	
 	Snake.prototype.hitSelf = function () {
@@ -114,7 +95,6 @@ Snakey.Snake = (function () {
 		}
 		return false;	
 	}
-	
 	
 	return Snake
 })();
@@ -172,7 +152,7 @@ Snakey.Game = (function () {
 	}
 	
 	Game.prototype.step = function () {
-		if(this.snake.hitSelf() || this.snake.offBoard(this.snake.head)){
+		if(this.snake.hitSelf() || this.snake.offBoard()) {
 			clearInterval(timer);
 		};
 		this.snake.step();
@@ -194,8 +174,8 @@ Snakey.Game = (function () {
 	}
 	
 	Game.prototype.eatApple = function() {
-		var snakeR = this.snake.snake[this.snake.snake.length - 1][0];
-		var snakeC = this.snake.snake[this.snake.snake.length - 1][1];
+		var snakeR = this.snake.head[0];
+		var snakeC = this.snake.head[1];
 		if(this.board.board[snakeR][snakeC] == "apple") {
 			this.points += 1;
 			this.board.board[snakeR][snakeC] = "snake";
@@ -205,25 +185,6 @@ Snakey.Game = (function () {
 	
 	return Game;
 })();
-// 
-// var snake = new Snakey.Snake();
-// console.log(snake);
-// snake.turn("down");
-// snake.step();
-// console.log(snake);
-// snake.turn("left");
-// snake.step();
-// console.log(snake);
-// snake.turn("up")
-// snake.step();
-// console.log(snake);
-// console.log(snake.hitSelf());
-// // snake.step();
-// // console.log(snake);
-// // snake.step();
-// // console.log(snake);
-// // snake.step();
-// // console.log(snake.offBoard());
-// // var board = new Snakey.Board();
+
 
 
