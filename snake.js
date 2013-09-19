@@ -152,10 +152,10 @@ Snakey.Game = (function () {
 	}
 	
 	Game.prototype.step = function () {
-		if(this.snake.hitSelf() || this.snake.offBoard()) {
-			clearInterval(timer);
-		};
 		this.snake.step();
+		// if(this.snake.hitSelf() || this.snake.offBoard()) {
+// 			clearInterval(timer);
+// 		};
 		this.addApple();
 		this.eatApple();
 		this.board.update(this.snake);
