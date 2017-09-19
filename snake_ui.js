@@ -26,9 +26,21 @@
 		for (var i = 0; i < across; i++) {
 			for (var j = 0; j < down; j++) {
 				var element = document.getElementById('space' + i + "_" + j);
+				removeDirectionClasses(element);
+				removeAppleClasses(element);
+				removeSnakeHeadClasses(element);
+
 				switch (Game.board.board[i][j]) {
+					case 'snake head':
+						element.classList.remove('apple');
+						element.classList.add('snake');
+						element.classList.add('fa');
+						element.classList.add('fa-space-shuttle');
+						element.classList.add(Game.snake.direction);
+						element.classList.add('snake-head');
+						break;
 					case 'snake':
-						element.classList.remove('apple')
+						element.classList.remove('apple');
 						element.classList.add('snake');
 						break;
 					case null:
@@ -37,9 +49,32 @@
 						break;
 					case 'apple':
 						element.classList.add('apple');
+						element.classList.add('fa');
+						element.classList.add('fa-spin');
+						element.classList.add('fa-circle-o-notch');
 						break;
 				}
 			}
+		}
+
+		function removeSnakeHeadClasses(element) {
+			element.classList.remove('fa');
+			element.classList.remove('fa-space-shuttle');
+			element.classList.remove('snake-head');
+		}
+
+		// prolly should just do a remove all classes and then add classes in a batch instead
+		function removeAppleClasses(element) {
+			element.classList.remove('fa');
+			element.classList.remove('fa-spin');
+			element.classList.remove('fa-circle-o-notch');
+		}
+
+		function removeDirectionClasses(element) {
+			element.classList.remove('left');
+			element.classList.remove('right');
+			element.classList.remove('down');
+			element.classList.remove('up');
 		}
 		
 		document.getElementById('messages').textContent = 'Points: ' + Game.points;
@@ -73,16 +108,16 @@
 				}
 				play();
 	    case 37:
-	      Game.snake.turn('up');
-	    	break;
-	    case 38:
 	      Game.snake.turn('left');
 	    	break;
+	    case 38:
+	      Game.snake.turn('up');
+	    	break;
 	    case 39:
-	      Game.snake.turn('down');
+	      Game.snake.turn('right');
 	    	break;
 	    case 40:
-	      Game.snake.turn('right');
+	      Game.snake.turn('down');
 	    	break;
 	  }
 	});

@@ -6,54 +6,64 @@ Snakey.Snake = (function () {
 	function Snake () {
 		this.snake = [[5, 5], [5, 6], [5, 7], [5, 8], [5, 9]];
 		this.head = this.snake[this.snake.length - 1];
-		this.direction = 'down';
+		this.direction = 'right';
+		this.changedPositionThisStep = false;
 	}
 	
 	Snake.prototype.turn = function(direction) {
+		if (this.changedPositionThisStep) {
+			return;
+		}
+
+		this.changedPositionThisStep = true;
+
 		switch(direction) {
-			case 'left':
-				if(!(this.direction == 'right')) {
-					this.direction = direction;
-				}
-				break;
-			case 'right':
-				if(!(this.direction == 'left')) {
-					this.direction = direction;
-				}
-				break;
 			case 'up':
-				if(!(this.direction == 'down')) {
+				if (!(this.direction == 'down')) {
 					this.direction = direction;
 				}
 				break;
 			case 'down':
-				if(!(this.direction == 'up')) {
+				if (!(this.direction == 'up')) {
+					this.direction = direction;
+				}
+				break;
+			case 'left':
+				if (!(this.direction == 'right')) {
+					this.direction = direction;
+				}
+				break;
+			case 'right':
+				if (!(this.direction == 'left')) {
 					this.direction = direction;
 				}
 				break;
 		}
+
+		console.log(this.direction);
 	}
 	
 	Snake.prototype.step = function() {
 		var newHead = [];
+		this.changedPositionThisStep = false;
 		
 		switch(this.direction) {
-			case 'up':
+			case 'left':
 				newHead[0] = this.head[0] - 1;
 				newHead[1] = this.head[1];
 				this.changeSnake(newHead);
 				break;
-			case 'down':
+			case 'right':
 				newHead[0] = this.head[0] + 1;
 				newHead[1] = this.head[1];
 				this.changeSnake(newHead);
 				break;
-			case 'left':
+			case 'up':
 				newHead[0] = this.head[0];
 				newHead[1] = this.head[1] - 1;
 				this.changeSnake(newHead);
 				break;
-			case 'right':
+			case 'down':
 				newHead[0] = this.head[0];
 				newHead[1] = this.head[1] + 1;
 				this.changeSnake(newHead);
@@ -82,8 +92,11 @@ Snakey.Snake = (function () {
 		
 	Snake.prototype.embiggenSnake = function () {
 		var endOfSnake = this.snake[0];
+		var XCoordinateDif = this.snake[0][0] - this.snake[1][0];
+		var YCoordinateDif = this.snake[0][1] - this.snake[1][1];
+
 		for (var i = 0; i < 2; i++) {
-			this.snake.unshift([endOfSnake[0] + i + 1, endOfSnake[1]]);
+			this.snake.unshift([this.snake[0] + XCoordinateDif, this.snake[1] + YCoordinateDif]);
 		}
 	}
 	
@@ -109,8 +122,13 @@ Snakey.Board = (function () {
 		for (var i = 0, len = snake.snake.length; i < len; i ++) {
 			var row = snake.snake[i][0];
 			var col = snake.snake[i][1];
+
 			if (this.board[row]) {
-				this.board[row][col] = 'snake';
+				var value = 'snake';
+				if (snake.head[0] == row && snake.head[1] == col) {
+					value += ' head';
+				}
+				this.board[row][col] = value;
 			}
 		}
 	}

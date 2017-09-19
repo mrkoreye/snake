@@ -1,33 +1,105 @@
-h1, 
+body {
+	text-align: center;
+	max-width: 800px;
+	font-family: monospace;
+}
+
+h1 {
+	font-size: 7em;
+	font-family: 'VT323', monospace;
+	margin: 10px;
+}
+
 h4 {
-	font-family: 'VT323', monospace;	
+	max-width: 500px;
+	margin: 20px auto;
+	font-size: 1.2em;
+	font-weight: normal;
 }
 
 .space {
 	height: 15px;
 	width: 15px;
 	display: inline-block;
+	vertical-align: middle;
+	background-color: white;
 	border-style: solid;
 	border-width: 1px;
 	border-color: white;
-	vertical-align: middle;
-	background-color: lightgray;
-	border-radius: 3px;
 }
 
 .row-snake {
 	white-space: nowrap;
-	height: 15px;
 }
 
 #messages {
-	font-size: 26px;
-}
-
-.snake {
-	background-color: red;
+	font-size: 1.4em;
+	margin: 20px;
 }
 
 .apple {
-	background-color: blue;
+	border-style: solid;
+	border-width: 1px;
+	border-color: white;
+}
+
+.snake {
+	background-color: yellow;
+	background: linear-gradient(-90deg, red, yellow);
+	border-radius: 11px;
+}
+
+.snake.up {
+	transform: rotate(270deg);
+}
+
+.snake.left {
+	transform: rotate(180deg);
+}
+
+.snake.down {
+	transform: rotate(90deg);
+}
+
+.snake.snake-head {
+	color: red;
+	background-color: white;
+	border-color: white;
+	font-size: 30px;
+	line-height: 15px;
+	position: relative;
+	z-index: 10;
+	overflow: visible;
+	text-align: center;
+	background: none;
+}
+
+.fa-space-shuttle:before {
+	position: relative;
+	left: -18px;
+}
+
+.apple {
+	color: blue;
+}
+
+#root-div {
+	margin: 0 auto;
+	display: inline-block;
+	border: 1px solid rgb(94, 251, 251);
+	box-shadow: 1px 0px 19px 3px rgba(0,0,0,0.2);
+}
+
+@media(max-width: 550px) {
+	.space {
+		height: 10px;
+		width: 10px;
+	}
+}
+
+@media(max-width: 380px) {
+	.space {
+		height: 7px;
+		width: 7px;
+	}
 }
