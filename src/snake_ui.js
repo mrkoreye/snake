@@ -1,8 +1,11 @@
+import Game from './game';
+
 (function() {
-	var Game = new Snakey.Game();
+	var Game = new Game();
 	var SnakeTimer = '';
 	var across = 30;
 	var down = 30;
+	var gameSpeed = 120;
 	
 	function createGrid() {
 		document.getElementById('root-div').innerHTML = '';
@@ -35,6 +38,7 @@
 						element.classList.remove('apple');
 						element.classList.add('snake');
 						element.classList.add('fa');
+						element.classList.add('fa-2x');
 						element.classList.add('fa-space-shuttle');
 						element.classList.add(Game.snake.direction);
 						element.classList.add('snake-head');
@@ -51,6 +55,7 @@
 						element.classList.add('apple');
 						element.classList.add('fa');
 						element.classList.add('fa-spin');
+						element.classList.add('fa-2x');
 						element.classList.add('fa-circle-o-notch');
 						break;
 				}
@@ -61,6 +66,7 @@
 			element.classList.remove('fa');
 			element.classList.remove('fa-space-shuttle');
 			element.classList.remove('snake-head');
+			element.classList.add('fa-2x');
 		}
 
 		// prolly should just do a remove all classes and then add classes in a batch instead
@@ -68,6 +74,7 @@
 			element.classList.remove('fa');
 			element.classList.remove('fa-spin');
 			element.classList.remove('fa-circle-o-notch');
+			element.classList.add('fa-2x');
 		}
 
 		function removeDirectionClasses(element) {
@@ -81,7 +88,7 @@
 	}
 
 	function play() {
-		Game = new Snakey.Game();
+		Game = new Game();
 		createGrid();
 		SnakeTimer = window.setInterval(function() {
 			Game.step();
@@ -90,7 +97,7 @@
 			} else {
 				renderSnake();
 			}
-		}, 100);
+		}, gameSpeed);
 	}; 
 	
 	document.addEventListener('keydown', function(e) {
