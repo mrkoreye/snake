@@ -1,10 +1,10 @@
 import Game from './game';
 
 class SnakeUi {
-	game = new Game(30);
-	snakeTimer = '';
-	across = 30;
-	down = 30;
+  game = new Game(30);
+  snakeTimer = '';
+  across = 30;
+  down = 30;
   gameSpeed = 120;
   
   constructor() {
@@ -12,60 +12,60 @@ class SnakeUi {
     this.addKeyboardEventListener();
     document.getElementById('messages').textContent = 'Press Spacebar to start/restart';
   }
-	
-	createGrid() {
-		document.getElementById('root-div').innerHTML = '';
-		for (var j = 0; j < this.across; j++) {
-			var snakeRowElement = document.createElement('div');
-			snakeRowElement.id = 'row' + j;
-			snakeRowElement.classList.add('row-snake');
-			document.getElementById('root-div').appendChild(snakeRowElement);
+  
+  createGrid() {
+    document.getElementById('root-div').innerHTML = '';
+    for (var j = 0; j < this.across; j++) {
+      var snakeRowElement = document.createElement('div');
+      snakeRowElement.id = 'row' + j;
+      snakeRowElement.classList.add('row-snake');
+      document.getElementById('root-div').appendChild(snakeRowElement);
 
-			for (var i = 0; i < this.down; i++) {
-				var spaceElement = document.createElement('div');
-				spaceElement.id = 'space' + i + "_" + j;
-				spaceElement.classList.add('space');
-				spaceElement.innerHTML = '&nbsp;'
-				document.getElementById('row' + j).appendChild(spaceElement);
-			}
-		}
-	}
+      for (var i = 0; i < this.down; i++) {
+        var spaceElement = document.createElement('div');
+        spaceElement.id = 'space' + i + "_" + j;
+        spaceElement.classList.add('space');
+        spaceElement.innerHTML = '&nbsp;'
+        document.getElementById('row' + j).appendChild(spaceElement);
+      }
+    }
+  }
 
-	renderSnake() {
-		for (var i = 0; i < this.across; i++) {
-			for (var j = 0; j < this.down; j++) {
-				var element = document.getElementById('space' + i + "_" + j);
-				this.removeDirectionClasses(element);
-				this.removeAppleClasses(element);
+  renderSnake() {
+    for (var i = 0; i < this.across; i++) {
+      for (var j = 0; j < this.down; j++) {
+        var element = document.getElementById('space' + i + "_" + j);
+        this.removeDirectionClasses(element);
+        this.removeAppleClasses(element);
         this.removeSnakeHeadClasses(element);
 
-				switch (this.game.board.board[i][j]) {
-					case 'snake head':
-						element.classList.remove('apple');
-						element.classList.add('snake');
-						element.classList.add('fa');
-						element.classList.add('fa-2x');
-						element.classList.add('fa-space-shuttle');
-						element.classList.add(this.game.snake.direction);
-						element.classList.add('snake-head');
-						break;
-					case 'snake':
-						element.classList.remove('apple');
-						element.classList.add('snake');
-						break;
-					case null:
-						element.classList.remove('snake');
-						element.classList.remove('apple');
-						break;
-					case 'apple':
-						element.classList.add('apple');
-						element.classList.add('fa');
-						element.classList.add('fa-spin');
-						element.classList.add('fa-2x');
-						element.classList.add('fa-circle-o-notch');
-						break;
-				}
-			}
+        switch (this.game.board.board[i][j]) {
+          case 'snake head':
+            element.classList.remove('apple');
+            element.classList.add('snake');
+            element.classList.add('fa');
+            element.classList.add('fa-2x');
+            element.classList.add('fa-space-shuttle');
+            element.classList.add(this.game.snake.direction);
+            element.classList.add('snake-head');
+            break;
+          case 'snake':
+            element.classList.remove('apple');
+            element.classList.add('snake');
+            break;
+          case null:
+            element.classList.remove('snake');
+            element.classList.remove('apple');
+            break;
+          case 'apple':
+            element.classList.add('apple');
+            element.classList.add('fa');
+            element.classList.add('fa-spin');
+            element.classList.add('fa-2x');
+            element.classList.add('fa-circle-o-notch');
+            break;
+        }
+      }
     }
   }
 
@@ -95,20 +95,20 @@ class SnakeUi {
     element.classList.remove('up');
   }
 
-	play() {
-		this.game = new Game();
-		this.createGrid();
-		this.snakeTimer = window.setInterval(() => {
+  play() {
+    this.game = new Game();
+    this.createGrid();
+    this.snakeTimer = window.setInterval(() => {
       this.game.step();
 
-			if (this.game.snake.hitSelf() || this.game.snake.offBoard()) {
-				clearInterval(this.snakeTimer);
-			} else {
+      if (this.game.snake.hitSelf() || this.game.snake.offBoard()) {
+        clearInterval(this.snakeTimer);
+      } else {
         this.renderSnake();
         this.updatePoints();
-			}
-		}, this.gameSpeed);
-	}; 
+      }
+    }, this.gameSpeed);
+  }; 
   
   addKeyboardEventListener() {
     document.addEventListener('keydown', (e) => {

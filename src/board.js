@@ -5,9 +5,9 @@ export class Board {
   constructor(boardSize) {
     this.boardSize = boardSize;
   }
-	
-	update(snake) {
-		this.clearBoard();
+  
+  update(snake) {
+    this.clearBoard();
     snake.snake.forEach((snakePiece) => {
       const row = snakePiece[0];
       const col = snakePiece[1];
@@ -21,17 +21,17 @@ export class Board {
         this.board[row][col] = value;
       }
     });
-			
-	}
-	
-	createBoard() {
+      
+  }
+  
+  createBoard() {
     const board = new Array(this.boardSize).fill(null);
     return board.map((el) => new Array(this.boardSize).fill(null));
-	}
-	
-	clearBoard() {
-		this.board = this.createBoard();
-	}
+  }
+  
+  clearBoard() {
+    this.board = this.createBoard();
+  }
 }
 
 export default Board;
