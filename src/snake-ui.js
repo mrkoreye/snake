@@ -1,10 +1,9 @@
 import Game from './game';
 
 class SnakeUi {
-  game = new Game(30);
-  snakeTimer = '';
-  across = 30;
-  down = 30;
+  game = null;
+  snakeTimer = null;
+  boardSize = 30;
   gameSpeed = 120;
   
   constructor() {
@@ -15,13 +14,13 @@ class SnakeUi {
   
   createGrid() {
     document.getElementById('root-div').innerHTML = '';
-    for (var j = 0; j < this.across; j++) {
+    for (var j = 0; j < this.boardSize; j++) {
       var snakeRowElement = document.createElement('div');
       snakeRowElement.id = 'row' + j;
       snakeRowElement.classList.add('row-snake');
       document.getElementById('root-div').appendChild(snakeRowElement);
 
-      for (var i = 0; i < this.down; i++) {
+      for (var i = 0; i < this.boardSize; i++) {
         var spaceElement = document.createElement('div');
         spaceElement.id = 'space' + i + "_" + j;
         spaceElement.classList.add('space');
@@ -32,37 +31,22 @@ class SnakeUi {
   }
 
   renderSnake() {
-    for (var i = 0; i < this.across; i++) {
-      for (var j = 0; j < this.down; j++) {
+    for (var i = 0; i < this.boardSize; i++) {
+      for (var j = 0; j < this.boardSize; j++) {
         var element = document.getElementById('space' + i + "_" + j);
-        this.removeDirectionClasses(element);
-        this.removeAppleClasses(element);
-        this.removeSnakeHeadClasses(element);
-
+        
         switch (this.game.board.board[i][j]) {
           case 'snake head':
-            element.classList.remove('apple');
-            element.classList.add('snake');
-            element.classList.add('fa');
-            element.classList.add('fa-2x');
-            element.classList.add('fa-space-shuttle');
-            element.classList.add(this.game.snake.direction);
-            element.classList.add('snake-head');
+            element.className = `${this.game.snake.direction} snake-head snake space`;
             break;
           case 'snake':
-            element.classList.remove('apple');
-            element.classList.add('snake');
+            element.className = `snake space`;
             break;
           case null:
-            element.classList.remove('snake');
-            element.classList.remove('apple');
+            element.className = `space`;
             break;
           case 'apple':
-            element.classList.add('apple');
-            element.classList.add('fa');
-            element.classList.add('fa-spin');
-            element.classList.add('fa-2x');
-            element.classList.add('fa-circle-o-notch');
+            element.className = `apple space`
             break;
         }
       }
@@ -73,38 +57,21 @@ class SnakeUi {
     document.getElementById('messages').textContent = 'Points: ' + this.game.points;
   }
 
-  removeSnakeHeadClasses(element) {
-    element.classList.remove('fa');
-    element.classList.remove('fa-space-shuttle');
-    element.classList.remove('snake-head');
-    element.classList.add('fa-2x');
-  }
-
-  // prolly should just do a remove all classes and then add classes in a batch instead
-  removeAppleClasses(element) {
-    element.classList.remove('fa');
-    element.classList.remove('fa-spin');
-    element.classList.remove('fa-circle-o-notch');
-    element.classList.add('fa-2x');
-  }
-
-  removeDirectionClasses(element) {
-    element.classList.remove('left');
-    element.classList.remove('right');
-    element.classList.remove('down');
-    element.classList.remove('up');
+  gameOver() {
+    document.getElementById('messages').textContent = 'Ooops, game over. Points: ' + this.game.points;
   }
 
   play() {
-    this.game = new Game();
+    this.game = new Game(this.boardSize);
     this.createGrid();
     this.snakeTimer = window.setInterval(() => {
       this.game.step();
 
       if (this.game.snake.hitSelf() || this.game.snake.offBoard()) {
         clearInterval(this.snakeTimer);
+        this.gameOver();
       } else {
-        this.renderSnake();
+        this.renderSnake(); 
         this.updatePoints();
       }
     }, this.gameSpeed);

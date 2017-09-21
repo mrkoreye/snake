@@ -1,4 +1,4 @@
-export class Snake {
+class Snake {
   snake = [[5, 5], [5, 6], [5, 7], [5, 8], [5, 9]];
   head = this.snake[this.snake.length - 1];
   direction = 'right';

@@ -1,12 +1,20 @@
 import Board from './board';
 import Snake from './snake';
+import Music from './music';
 
 class Game {
+  boardSize = null;
+  board = null;
+  snake = null;
+  music = null;
+  points = 0;
+  paperPresent = false;
+
   constructor(boardSize = 30) {
     this.boardSize = boardSize;
     this.board = new Board(boardSize);
     this.snake = new Snake(boardSize);
-    this.points = 0;
+    this.music = new Music();
   }
   
   step() {
@@ -17,9 +25,9 @@ class Game {
   }
   
   addApple() {
-    var num = Math.random();
-    var row = this.getRandomInt(0, 29);
-    var col = this.getRandomInt(0, 29); 
+    const num = Math.random();
+    const row = this.getRandomInt(0, 29);
+    const col = this.getRandomInt(0, 29); 
 
     if (num > 0.96) {
       if (this.board.board[row][col] == null) {
@@ -29,13 +37,14 @@ class Game {
   }
   
   eatApple() {
-    var snakeR = this.snake.head[0];
-    var snakeC = this.snake.head[1];
+    const snakeR = this.snake.head[0];
+    const snakeC = this.snake.head[1];
 
     if (this.board.board[snakeR] && this.board.board[snakeR][snakeC] == 'apple') {
       this.points += 1;
       this.board.board[snakeR][snakeC] = 'snake';
       this.snake.embiggenSnake();
+      this.music.playNextSetOfNotes();
     };
   }
   
