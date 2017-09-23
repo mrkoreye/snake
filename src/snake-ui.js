@@ -1,15 +1,18 @@
 import Game from './game';
+import Music from './music'
 
 class SnakeUi {
   game = null;
   snakeTimer = null;
   boardSize = 30;
   gameSpeed = 120;
+  music = null;
   
   constructor() {
     this.createGrid();
-    this.addKeyboardEventListener();
-    document.getElementById('messages').textContent = 'Press Spacebar to start/restart';
+    this.addEventListeners();
+    this.music = new Music()
+    this.showInstructions();
   }
   
   createGrid() {
@@ -42,40 +45,63 @@ class SnakeUi {
           case 'snake':
             element.className = `snake space`;
             break;
-          case null:
-            element.className = `space`;
-            break;
           case 'apple':
             element.className = `apple space`
+            break;
+          case 'paper':
+            element.className = `paper space`
+            break;
+          default:
+            element.className = `space`;
             break;
         }
       }
     }
   }
 
+  showInstructions() {
+    document.getElementById('instructions').classList.add('show');
+  }
+
+  hideInstructions() {
+    document.getElementById('instructions').classList.remove('show');
+  }
+
+  showGameOverMessage() {
+    document.getElementById('game-over-message').classList.add('show');
+  }
+
+  hideGameOverMessage() {
+    document.getElementById('game-over-message').classList.remove('show');
+  }
+
   updatePoints() {
     document.getElementById('messages').textContent = 'Points: ' + this.game.points;
   }
 
-  gameOver() {
-    document.getElementById('messages').textContent = 'Ooops, game over. Points: ' + this.game.points;
-  }
-
   play() {
-    this.game = new Game(this.boardSize);
+    this.game = new Game(this.boardSize, this.music);
     this.createGrid();
+    this.hideInstructions();
+    this.hideGameOverMessage();
     this.snakeTimer = window.setInterval(() => {
       this.game.step();
 
       if (this.game.snake.hitSelf() || this.game.snake.offBoard()) {
         clearInterval(this.snakeTimer);
-        this.gameOver();
+        this.showGameOverMessage();
       } else {
         this.renderSnake(); 
         this.updatePoints();
       }
     }, this.gameSpeed);
-  }; 
+  };
+  
+  addEventListeners() {
+    this.addKeyboardEventListener();
+    this.addPlayButtonListener();
+    this.addStopButtonListener();
+  }
   
   addKeyboardEventListener() {
     document.addEventListener('keydown', (e) => {
@@ -105,6 +131,18 @@ class SnakeUi {
           this.game.snake.turn('down');
           break;
       }
+    });
+  }
+
+  addPlayButtonListener() {
+    document.getElementById('play-button').addEventListener('click', (e) => {
+      this.music.playProgress();
+    });
+  }
+
+  addStopButtonListener() {
+    document.getElementById('stop-button').addEventListener('click', (e) => {
+      this.music.stopAllSounds();
     });
   }
 };

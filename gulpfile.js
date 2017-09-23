@@ -12,6 +12,7 @@ var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer');
 var concat = require('gulp-concat');
 var webpack = require('webpack-stream');
+var cssBase64 = require('gulp-css-base64');
 
 gulp.task('default', function() {
   return gulp.src('src/entry.js')
@@ -26,6 +27,7 @@ gulp.task('build', function(callback) {
     'copy:assets',
     'scss',
     'postcss',
+    'css:base64',
     'js',
     'inject:html',
     'inject:js',
@@ -72,6 +74,12 @@ gulp.task('copy:assets', function() {
 gulp.task('postcss', function() {
   return gulp.src('build/**/*.css')
     .pipe(postcss([ autoprefixer() ]))
+    .pipe(gulp.dest('build'));
+});
+
+gulp.task('css:base64', function() {
+  return gulp.src('build/**/*.css')
+    .pipe(cssBase64())  
     .pipe(gulp.dest('build'));
 });
 

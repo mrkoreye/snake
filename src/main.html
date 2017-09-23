@@ -1,4 +1,33 @@
 <h1>404</h1>
-<h4>We couldn't find what you are looking for, but maybe you can have a hand in creating a masterpiece. Help Bach collect his lost notes, just don't let him get tangled in his ideas or hit a wall!</h4>
-<div id="root-div"></div>
+<h4>We couldn't find what you are looking for, but maybe you can have a hand in creating a masterpiece. Help Bach collect his lost notes!</h4>
+<div class="game-container">
+  <div 
+    id="instructions"
+    class="instructions">
+      <div class="snake snake-head space"></div>
+      <ul>
+        <li>Collect notes (<div class="apple space"></div>), to earn points</li>
+        <li>Collect paper (<div class="paper space"></div>) and Bach will write down some of those ideas he has floating behind him</li>
+        <li>Navigate using the arrow keys</li>
+        <li>Start and restart the game using spacebar</li>
+      </ul>
+    </div>
+    <div
+      id="game-over-message"
+      class="instructions game-over">
+      Oops, game over! Listen to the progress you helped Bach make in writing the Presto from Sonata No. 1 for Solo Violin. 
+      Don't worry, progress is cumulative, so you will be able to keep working towards the finale if you try again.
+      <div class="player-controls">
+        <div 
+          id="play-button"
+          class="play-button">
+        </div>
+        <div 
+          id="stop-button"
+          class="stop-button">
+        </div>
+      </div>
+    </div>
+    <div id="root-div"></div>
+</div>
 <div id="messages"></div>

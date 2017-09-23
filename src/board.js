@@ -33,11 +33,11 @@ class Board {
   clearBoardOfSnake() {
     this.board = this.board.map((row) => {
       return row.map((element) => {
-        if (element === 'apple') {
-          return element
+        if (element === 'snake') {
+          return null;
         }
 
-        return null;
+        return element;
       })
     });
   }

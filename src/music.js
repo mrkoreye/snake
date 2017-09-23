@@ -3,10 +3,14 @@ import presto from './sonata-presto'
 class Music {
   audioContext = null;
   currentSetOfNotesIndex = 0;
-  normalGain = null;
-  accentGain = null;
-  noteLength = 0.25;
-  timeBetweenNotes = 0.3;
+  gain = null;
+  noteLength = 0.170000;
+  timeBetweenNotes = 0.030000;
+  frequencyTable = {};
+  allNotes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+  defaultAccentGain = 0.250000;
+  defaultNormalGain = 0.200000;
+  currentOscillators = [];
 
   constructor() {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -14,46 +18,121 @@ class Music {
 
     this.sheetMusic = presto;
 
-    this.normalGain = this.audioContext.createGain();
-    this.normalGain.connect(this.audioContext.destination);
-    this.normalGain.gain.value = 0.6;
+    this.gain = this.audioContext.createGain();
+    this.gain.connect(this.audioContext.destination);
 
-    this.accentGain = this.audioContext.createGain();
-    this.accentGain.connect(this.audioContext.destination);
-    this.accentGain.gain.value = 0.8;
+    this.populateFrequencyTable();
+  }
 
-    const oscillator = this.audioContext.createOscillator();
-    oscillator.connect(this.normalGain);
+  populateFrequencyTable() {
+    const octaves = 8;
+    let currentOctave = 0;
 
-    this.accentOscillator = this.audioContext.createOscillator();
-    this.accentOscillator.connect(this.accentGain);
+    while (currentOctave < octaves) {
+      for (let index = 0; index < this.allNotes.length; index++) {
+        const note = this.allNotes[index];
+        const noteWithOctave = `${note}${currentOctave}`;
+        this.frequencyTable[noteWithOctave] = this.frequencyToPlay(noteWithOctave);
+      }
+
+      currentOctave++;
+    }
   }
 
   playNextSetOfNotes() {
     this.playNotes(this.sheetMusic[this.currentSetOfNotesIndex]);
     this.currentSetOfNotesIndex++;
+
+    if (this.currentSetOfNotesIndex >= this.sheetMusic.length) {
+      this.currentSetOfNotesIndex = 0;
+    }
+  }
+
+  playAll() {
+    this.playFrom(0);
+  }
+
+  stopAllSounds() {
+    const currentTime = this.audioContext.currentTime;
+    this.gain.gain.cancelScheduledValues(currentTime);
+    this.currentOscillators.forEach((osc) => {
+      osc.stop(currentTime);
+    });
+  }
+
+  playProgress() {
+    const notes = this.sheetMusic
+      .slice(0, this.currentSetOfNotesIndex)
+      .reduce((prevValue, element) => prevValue.concat(element));
+
+    this.playNotes(notes);
+  }
+
+  playFrom(index) {
+    const notes = this.sheetMusic.slice(index).reduce((prevValue, element) => prevValue.concat(element));
+    this.playNotes(notes);
   }
 
   playNotes(notes) {
-    const frequencies = notes.map((note) => this.frequencyToPlay(note));
+    const processedNotes = notes.map((note) => this.processNoteData(note));
+    this.currentOscillators = [];
+
     let timeToPlay = this.audioContext.currentTime;
-    let isFirstBeat = true;
-
-    frequencies.forEach((freq) => {
-      const oscillator = this.audioContext.createOscillator();
-
-      if (isFirstBeat) {
-        oscillator.connect(this.accentGain);
-      } else {
-        oscillator.connect(this.normalGain);
+    processedNotes.forEach((processedNote) => {
+      for (let index = 0; index < processedNote.frequencies.length; index++) {
+        const frequency = processedNote.frequencies[index];
+        const oscillator = this.audioContext.createOscillator();
+        const timeToEnd = timeToPlay + this.noteLength * processedNote.noteLength;
+        oscillator.type = 'square';
+        oscillator.connect(this.gain);
+        oscillator.frequency.value = frequency;
+        this.currentOscillators.push(oscillator);
+  
+        if (processedNote.isAccent) {
+          // Ramping to correct gain value makes the attack smoother and just makes things sound better
+          // It also gives it a slightly springier feel, which suites this piece :P
+          this.gain.gain.exponentialRampToValueAtTime(this.defaultAccentGain, timeToPlay + 0.0001);
+        } else {
+          this.gain.gain.exponentialRampToValueAtTime(this.defaultNormalGain, timeToPlay + 0.0001);
+        }
+  
+        this.gain.gain.exponentialRampToValueAtTime(0.000001, timeToPlay);
+        oscillator.start(timeToPlay);
+        this.gain.gain.exponentialRampToValueAtTime(0.000001, timeToEnd - 0.0001);
+        oscillator.stop(timeToEnd);
       }
-
-      oscillator.frequency.value = freq;
-      oscillator.start(timeToPlay);
-      oscillator.stop(timeToPlay + this.noteLength);
-      timeToPlay += this.timeBetweenNotes;
-      isFirstBeat = false;
+      
+      timeToPlay += (this.noteLength * processedNote.noteLength + this.timeBetweenNotes);
     });
+  }
+
+  processNoteData(note) {
+    // Note comes in the form E5, Ab3-a-t2, or D3-C4-D5-a-t6, etc.
+    // lowercase a stands for accent, lowercase t followed by a number is 
+    // note length (2 is twice the base note length)
+    // Multiple notes together mean that it's a chord
+    const noteBits = note.split('-');
+    let processedNote = {
+      isAccent: false,
+      noteLength: 1,
+      frequencies: [],
+    }
+
+    noteBits.forEach((noteInfo) => {
+      if (noteInfo === 'a') {
+        processedNote.isAccent = true;
+      } else if (noteInfo[0] === 't') {
+        processedNote.noteLength = parseInt(noteInfo.replace('t', ''));
+      } else {
+        const frequency = this.frequencyTable[noteInfo];
+
+        if (frequency) {
+          processedNote.frequencies.push(frequency);
+        }
+      }
+    });
+
+    return processedNote;
   }
 
   frequencyToPlay(note) {
@@ -62,14 +141,13 @@ class Music {
   }
 
   determineFrequency(halfstepswayFromC0) {
-    console.log(halfstepswayFromC0);
     // C 16.35 is C0
     return 16.35 * Math.pow(1.05946309436, halfstepswayFromC0);
   }
 
   determineHalfstepsAwayFromC0(note) {
     // Note format is Ab3, only supports flats
-    const notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+    const notes = this.allNotes;
     let steps = 0;
     let index = 0;
     let octave = 0;

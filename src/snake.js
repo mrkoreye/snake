@@ -90,6 +90,11 @@ class Snake {
       this.snake.unshift([this.snake[0] + XCoordinateDif, this.snake[1] + YCoordinateDif]);
     }
   }
+
+  shrinkSnake() {
+    const numItemsToDelete = Math.max(Math.floor(this.snake.length * 0.4), 0);
+    this.snake.splice(0, numItemsToDelete);
+  }
   
   hitSelf() {
     const head = this.head.toString();
