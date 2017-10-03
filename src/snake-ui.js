@@ -5,7 +5,7 @@ class SnakeUi {
   game = null;
   snakeTimer = null;
   boardSize = 30;
-  gameSpeed = 120;
+  gameSpeed = 140;
   music = null;
   
   constructor() {
@@ -13,6 +13,7 @@ class SnakeUi {
     this.addEventListeners();
     this.music = new Music()
     this.showInstructions();
+    this.updatePoints();
   }
   
   createGrid() {
@@ -76,7 +77,8 @@ class SnakeUi {
   }
 
   updatePoints() {
-    document.getElementById('messages').textContent = 'Points: ' + this.game.points;
+    const message = `Points: ${this.game && this.game.points || 0}, Progress: ${this.music.percentProgressThroughPiece() || '0%'}`;
+    document.getElementById('messages').textContent = message;
   }
 
   play() {

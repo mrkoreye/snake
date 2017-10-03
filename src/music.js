@@ -8,8 +8,8 @@ class Music {
   timeBetweenNotes = 0.030000;
   frequencyTable = {};
   allNotes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-  defaultAccentGain = 0.250000;
-  defaultNormalGain = 0.200000;
+  defaultAccentGain = 0.200000;
+  defaultNormalGain = 0.100000;
   currentOscillators = [];
 
   constructor() {
@@ -20,6 +20,7 @@ class Music {
 
     this.gain = this.audioContext.createGain();
     this.gain.connect(this.audioContext.destination);
+    this.gain.gain.value = 0;
 
     this.populateFrequencyTable();
   }
@@ -37,6 +38,11 @@ class Music {
 
       currentOctave++;
     }
+  }
+
+  percentProgressThroughPiece() {
+    const progress = this.currentSetOfNotesIndex / this.sheetMusic.length;
+    return `${Math.round(progress * 100)}%`;
   }
 
   playNextSetOfNotes() {
@@ -74,6 +80,7 @@ class Music {
   }
 
   playNotes(notes) {
+    this.stopAllSounds();
     const processedNotes = notes.map((note) => this.processNoteData(note));
     this.currentOscillators = [];
 

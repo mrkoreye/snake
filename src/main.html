@@ -1,22 +1,23 @@
 <h1>404</h1>
-<h4>We couldn't find what you are looking for, but maybe you can have a hand in creating a masterpiece. Help Bach collect his lost notes!</h4>
+<div id="messages"></div>
 <div class="game-container">
   <div 
     id="instructions"
     class="instructions">
       <div class="snake snake-head space"></div>
+      <h4>Help Bach collect his lost notes!</h4>
       <ul>
         <li>Collect notes (<div class="apple space"></div>), to earn points</li>
-        <li>Collect paper (<div class="paper space"></div>) and Bach will write down some of those ideas he has floating behind him</li>
-        <li>Navigate using the arrow keys</li>
-        <li>Start and restart the game using spacebar</li>
+        <li>Collect paper (<div class="paper space"></div>) to write down ideas</li>
+        <li>Navigate using the arrow keys or pad</li>
+        <li>Start and restart the game using spacebar or start button</li>
       </ul>
     </div>
     <div
       id="game-over-message"
       class="instructions game-over">
-      Oops, game over! Listen to the progress you helped Bach make in writing the Presto from Sonata No. 1 for Solo Violin. 
-      Don't worry, progress is cumulative, so you will be able to keep working towards the finale if you try again.
+      Oops, game over! Click the play button to listen to the progress you helped Bach make in writing the Presto from Sonata No. 1 for Solo Violin. 
+      Musical progress is cumulative, so try again to pick up where you left off.
       <div class="player-controls">
         <div 
           id="play-button"
@@ -30,4 +31,44 @@
     </div>
     <div id="root-div"></div>
 </div>
-<div id="messages"></div>
+<div class="controls">
+  <div class="game-button-container">
+    <div 
+      id="start-game"
+      class="game-button start">
+    </div>
+    <div class="game-button-text">START</div>
+  </div>
+  <div class="game-button-container">
+    <div 
+      id="move-left"
+      class="game-button">
+    </div>
+    <div class="game-button-text">LEFT</div>
+  </div>
+  <div class="game-button-container">
+    <div 
+      id="move-up"
+      class="game-button">
+    </div>
+    <div class="game-button-text">UP</div>
+  </div>
+  <div class="game-button-container">
+    <div 
+      id="move-down"
+      class="game-button">
+    </div>
+    <div class="game-button-text">DOWN</div>
+  </div>
+  <div class="game-button-container">
+    <div 
+      id="move-right"
+      class="game-button">
+    </div>
+    <div class="game-button-text">RIGHT</div>
+  </div>
+</div>
+<div
+  class="github-link">
+  <a href="https://github.com/mrkoreye/snake"></a>
+</div>
