@@ -153,3 +153,16 @@ gulp.task('develop', function() {
     'connect'
   );
 });
+
+gulp.task('copy:dist', function() {
+  return gulp.src('build/index.html')
+    .pipe(rename('404.html'))
+    .pipe(gulp.dest('dist'));
+});
+
+gulp.task('release', function() {
+  return runSequence(
+    'build',
+    'copy:dist'
+  )
+});
