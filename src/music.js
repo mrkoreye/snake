@@ -62,7 +62,7 @@ class Music {
     const currentTime = this.audioContext.currentTime;
     this.gain.gain.cancelScheduledValues(currentTime);
     this.currentOscillators.forEach((osc) => {
-      osc.stop(currentTime);
+      osc.disconnect();
     });
   }
 

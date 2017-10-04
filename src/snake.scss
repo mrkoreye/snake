@@ -27,8 +27,8 @@ h4 {
 }
 
 .space {
-  height: 24px;
-  width: 24px;
+  height: 20px;
+  width: 20px;
   display: inline-block;
   vertical-align: middle;
   background-color: transparent;
@@ -185,8 +185,8 @@ h4 {
   display: block;
   text-align: center;
   background: cyan;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.5), inset 0 14px 35px rgba(255, 255, 255, 0.5), 1px 4px 7px rgba(0, 0, 0, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
@@ -206,15 +206,16 @@ h4 {
     display: block;
     position: absolute;
     z-index: -5;
-    width: 105px;
-    height: 105px;
-    top: -11px;
-    left: -12px;
+    width: 90px;
+    height: 90px;
+    top: -9px;
+    left: -10px;
     border-radius: 100%;
     background: cyan;
     box-shadow: inset 0 4px 15px rgba(255, 255, 255, 0.5), inset 0 -4px 15px rgba(0, 0, 0, 0.5);
   }
 
+  &.active,
   &:active {
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
   }
@@ -234,32 +235,6 @@ h4 {
     background-repeat: no-repeat;
     cursor: pointer;
     background-image: url('assets/github.svg');
-  }
-}
-
-@media (max-width: 900px) {
-  .space {
-    height: 22px;
-    width: 22px;
-  }
-}
-
-@media (max-width: 730px) {
-  .space {
-    height: 20px;
-    width: 20px;
-  }
-
-  .game-button {
-    width: 70px;
-    height: 70px;
-
-    &::before {
-      width: 90px;
-      height: 90px;
-      top: -9px;
-      left: -10px;
-    }
   }
 }
 

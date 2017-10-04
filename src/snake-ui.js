@@ -7,13 +7,15 @@ class SnakeUi {
   boardSize = 30;
   gameSpeed = 140;
   music = null;
+  clickEventType = 'click';
   
   constructor() {
+    this.clickEventType = this.getClickEventType();
+    this.music = new Music();
     this.createGrid();
-    this.addEventListeners();
-    this.music = new Music()
     this.showInstructions();
     this.updatePoints();
+    this.addEventListeners();
   }
   
   createGrid() {
@@ -98,11 +100,42 @@ class SnakeUi {
       }
     }, this.gameSpeed);
   };
+
+  startGame() {
+    if (this.snakeTimer) {
+      clearInterval(this.snakeTimer);
+    }
+    this.music.playNotes(['G3-Bb3-D3-a-t2']);
+    this.play();
+  }
   
   addEventListeners() {
     this.addKeyboardEventListener();
-    this.addPlayButtonListener();
-    this.addStopButtonListener();
+    this.addEventListenerById('play-button', () => this.music.playProgress());
+    this.addEventListenerById('stop-button', () => this.music.stopAllSounds());
+    this.addEventListenerById('start-game', () => this.startGame());
+
+    ['up', 'right', 'down', 'left'].forEach((direction) => {
+      const elementId = `move-${direction}`;
+      const isMobile = this.clickEventType === 'touchstart';
+      this.addEventListenerById(elementId, () => {
+        if (this.game) {
+          this.game.snake.turn(direction);
+        }
+
+        if (isMobile) {
+          const element = document.getElementById(elementId);
+          element.classList.add('active');
+        }
+      });
+
+      if (isMobile) {
+        this.addEventListenerById(elementId, () => {
+          const element = document.getElementById(elementId);
+          element.classList.remove('active');
+        }, 'touchend');
+      }
+    });
   }
   
   addKeyboardEventListener() {
@@ -116,10 +149,7 @@ class SnakeUi {
       switch (keyCode) {
         // Spacebar
         case 32:
-          if (this.snakeTimer) {
-            clearInterval(this.snakeTimer);
-          }
-          this.play();
+          this.startGame();
         case 37:
           this.game.snake.turn('left');
           break;
@@ -136,16 +166,20 @@ class SnakeUi {
     });
   }
 
-  addPlayButtonListener() {
-    document.getElementById('play-button').addEventListener('click', (e) => {
-      this.music.playProgress();
+  addEventListenerById(elementId, callback, clickEventType = this.clickEventType) {
+    document.getElementById(elementId).addEventListener(clickEventType, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      callback();
     });
   }
 
-  addStopButtonListener() {
-    document.getElementById('stop-button').addEventListener('click', (e) => {
-      this.music.stopAllSounds();
-    });
+  getClickEventType() {
+    if ('ontouchstart' in document.documentElement === true) {
+      return 'touchstart';
+    } else {
+      return 'click';
+    }
   }
 };
 
